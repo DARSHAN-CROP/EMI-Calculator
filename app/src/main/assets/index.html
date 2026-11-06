@@ -1,0 +1,30 @@
+<!doctype html><html lang="gu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F57C00"><title>EMI કૅલ્ક્યુલેટર / EMI Calculator</title>
+<style>:root{--c:#F57C00;--bg:#f5f6f8;--ink:#1b1b1f;--mut:#6b6b76}*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Noto Sans Gujarati",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:40px}
+header{background:var(--c);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:8px;position:sticky;top:0}header h1{margin:0;font-size:19px;flex:1}header button{background:#fff3;border:0;color:#fff;padding:8px 12px;border-radius:10px}
+main{max-width:640px;margin:0 auto;padding:14px}.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px #0001}
+input,select{width:100%;padding:11px;border:1px solid #d8dbe0;border-radius:10px;font-size:16px;margin:5px 0;background:#fff;color:var(--ink)}.btn{width:100%;padding:12px;border:0;border-radius:12px;background:var(--c);color:#fff;font-size:16px;font-weight:700;margin-top:6px}.btn.g{background:#e8eaee;color:var(--ink)}
+.row{display:flex;gap:8px;align-items:center}.grow{flex:1}.muted{color:var(--mut);font-size:13px}.big{font-size:18px;font-weight:700}.x{background:none;border:0;color:#c33;font-size:18px}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px 4px;text-align:right;border-bottom:1px solid #eee}th:first-child,td:first-child{text-align:left}
+.pill{display:inline-block;padding:3px 9px;border-radius:99px;background:#eef;font-size:12px;margin:2px}.ok{color:#1E9E63}.bad{color:#D64545}.bar{height:10px;border-radius:6px;background:#e8eaee;overflow:hidden}.bar i{display:block;height:100%;background:var(--c)}
+.dot{width:34px;height:34px;border-radius:50%;border:2px solid #d8dbe0;background:#fff;font-size:14px}.dot.on{background:var(--c);color:#fff;border-color:var(--c)}</style></head><body>
+<header><h1 id="ttl"></h1><button id="lang"></button></header><main id="m"></main><script>
+var gu=localStorage.getItem("lang_emi")!=="en";function $(s){return document.querySelector(s)}function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function el(h){var d=document.createElement("div");d.innerHTML=h;return d.firstChild}function t(k){return T[k]?T[k][gu?0:1]:k}
+function inr(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
+$("#lang").onclick=function(){gu=!gu;localStorage.setItem("lang_emi",gu?"gu":"en");render()};
+
+var T={ttl:["EMI કૅલ્ક્યુલેટર","EMI Calculator"],amt:["લોનની રકમ (₹)","Loan amount (₹)"],rate:["વ્યાજ દર (% વાર્ષિક)","Interest rate (% per year)"],yrs:["સમય (વર્ષ)","Tenure (years)"],emi:["માસિક EMI","Monthly EMI"],int:["કુલ વ્યાજ","Total interest"],tot:["કુલ ચૂકવણી","Total payment"],prin:["મૂળ રકમ","Principal"],sch:["વર્ષ પ્રમાણે હિસાબ","Year-wise schedule"],yr:["વર્ષ","Year"],paidp:["મૂળ","Principal"],paidi:["વ્યાજ","Interest"],bal:["બાકી","Balance"],share:["WhatsApp પર મોકલો","Share on WhatsApp"],ratio:["વ્યાજનો ભાગ","Interest share"]};
+var S;try{S=JSON.parse(localStorage.getItem("emi_v1"))}catch(e){}S=S||{a:500000,r:9,y:5};
+function calc(a,r,y){var n=Math.round(y*12),i=r/1200,e=i===0?a/n:a*i*Math.pow(1+i,n)/(Math.pow(1+i,n)-1);return{n:n,i:i,e:e,tot:e*n,int:e*n-a}}
+function render(){$("#ttl").textContent=t("ttl");$("#lang").textContent=gu?"English":"ગુજરાતી";var m=$("#m");
+ if(!m.firstChild){m.appendChild(el('<div class="card"><div class="muted">'+t("amt")+'</div><input id="a" type="number" inputmode="decimal" value="'+S.a+'"><input id="ar" type="range" min="10000" max="10000000" step="10000" value="'+S.a+'"><div class="muted">'+t("rate")+'</div><input id="r" type="number" step="0.1" value="'+S.r+'"><input id="rr" type="range" min="1" max="30" step="0.1" value="'+S.r+'"><div class="muted">'+t("yrs")+'</div><input id="y" type="number" step="0.5" value="'+S.y+'"><input id="yr" type="range" min="1" max="30" step="0.5" value="'+S.y+'"></div>'));m.appendChild(el('<div id="out"></div>'));
+  function sync(from){var map={a:"ar",r:"rr",y:"yr"};Object.keys(map).forEach(function(k){var n=$("#"+k),s=$("#"+map[k]);if(from===k)s.value=n.value;else if(from===map[k])n.value=s.value;});S.a=parseFloat($("#a").value)||0;S.r=parseFloat($("#r").value)||0;S.y=parseFloat($("#y").value)||0;localStorage.setItem("emi_v1",JSON.stringify(S));out()}
+  ["a","ar","r","rr","y","yr"].forEach(function(id){$("#"+id).oninput=function(){sync(id)}})}
+ out()}
+function out(){var o=$("#out");if(!(S.a>0&&S.y>0)){o.innerHTML="";return}var c=calc(S.a,S.r,S.y),pc=Math.round(S.a*100/c.tot);
+ var h='<div class="card"><div class="muted">'+t("emi")+'</div><div class="big" style="font-size:30px;color:var(--c)">'+inr(c.e)+'</div><div class="bar" style="margin:12px 0 6px"><i style="width:'+pc+'%"></i></div><div class="row"><div class="grow muted">'+t("prin")+': <b>'+inr(S.a)+'</b></div><div class="grow muted" style="text-align:right">'+t("int")+': <b>'+inr(c.int)+'</b></div></div><div style="margin-top:8px">'+t("tot")+': <b>'+inr(c.tot)+'</b> <span class="muted">('+t("ratio")+' '+(100-pc)+'%)</span></div>';
+ var msg=encodeURIComponent(t("ttl")+"\n"+inr(S.a)+", "+S.r+"%, "+S.y+" "+t("yrs")+"\nEMI: "+inr(c.e)+"\n"+t("int")+": "+inr(c.int));h+='<a class="btn g" style="display:block;text-align:center;text-decoration:none" href="https://wa.me/?text='+msg+'">'+t("share")+'</a></div>';
+ var bal=S.a,rows="",yp=0,yi=0;for(var k=1;k<=c.n;k++){var it=bal*c.i,pr=c.e-it;bal-=pr;yp+=pr;yi+=it;if(k%12===0||k===c.n){rows+='<tr><td>'+Math.ceil(k/12)+'</td><td>'+inr(yp)+'</td><td>'+inr(yi)+'</td><td>'+inr(Math.max(0,bal))+'</td></tr>';yp=0;yi=0}}
+ h+='<div class="card"><div class="big" style="margin-bottom:6px">'+t("sch")+'</div><table><tr><th>'+t("yr")+'</th><th>'+t("paidp")+'</th><th>'+t("paidi")+'</th><th>'+t("bal")+'</th></tr>'+rows+'</table></div>';o.innerHTML=h}
+render();
+
+</script></body></html>

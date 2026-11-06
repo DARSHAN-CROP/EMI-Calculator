@@ -2,6 +2,15 @@
 
 Loan EMI calculator with year-wise schedule (Gujarati and English).
 
-**Open it (no install):** https://1darshankumarsavsani-blip.github.io/EMI-Calculator/
+**Website (works on phone and PC, no install):** https://1darshankumarsavsani-blip.github.io/EMI-Calculator/
 
-By Darshankumar Savsani (DARSHAN CORPORATION). Data stays in your own browser. Source: `docs/index.html`.
+## Downloads (latest release)
+
+- `EMI_Calculator.apk`: Android app (works offline, the whole app is inside).
+- `EMI_Calculator_Windows.exe`: Windows launcher (opens the website in its own window; Edge or Chrome needed).
+
+By Darshankumar Savsani (DARSHAN CORPORATION). Data stays on your device.
+
+Honest note: tested in a headless browser only. The Android and Windows files have not been run on a real phone or PC yet.
+
+Source code: `docs/` (website) and `app/` (Android wrapper around the same page).
